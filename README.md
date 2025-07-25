@@ -1,40 +1,353 @@
-# Week 01 - Assignments
-Repositorio para los assignments de la primer semana.
+# Semperti DevOps/SRE Bootcamp - Journal Management System
 
-# Java Application
+Este repositorio contiene una aplicación Spring Boot utilizada para el bootcamp de DevOps/SRE en Semperti. El sistema permite la gestión de journals académicos con capacidad de carga y visualización de PDFs.
 
-## Prerequisites
+## 🚀 Quick Start
 
-	1. Java 8
-	2. Maven 3.3+
-	3. MySQL 5.6+
-	4. Internet connection
-	
-	
-## Instrucciones para correr esta aplicación
+### Prerequisites
 
-	1. Configurar la conexión de la base de datos desde Code/src/main/resources/application.properties
-	2. Ubicate en la carpeta del código y ejecutá "mvn spring-boot:run".
-	3. Revisá la siguiente dirección http://localhost:8080
-	4. [Opcional] Por defecto, la aplicación almacena los PDFs en el directorio <User_home>/upload. Si querés cambiar este directorio, podés utilizar la propiedad -Dupload-dir=<path>.
-	5. [Opcional] Los PDFs predefinidos pueden encontrarse en la carpeta PDF. Si querés ver los PDFs, tenés que copiar los contenidos de esta carpeta a lo definido en el paso anterior.
-	
-## Datos de autenticación
+- Java 8
+- Maven 3.3+
+- MySQL 5.6+
+- Docker (opcional)
+- Internet connection
 
-	El sistema viene con 4 cuentas pre-definidas:
-		1. publishers:
-			- username: publisher1 / password: publisher1
-			- username: publisher2 / password: publisher2
-		2. public users:
-			- username: user1 / password: user1
-			- username: user2 / password: user2
-            
-# Contact
+### Instalación y Ejecución Local
 
-Cualquier duda o consulta, ubicanos en [Slack](https://semperti.slack.com).
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/semperti-bootcamp/sre-bootcamp-[nombre]-[fecha].git
+   cd sre-bootcamp-[nombre]-[fecha]
+   ```
+
+2. **Configurar la base de datos**
+   ```bash
+   # Editar la configuración de MySQL
+   vim Code/src/main/resources/application.properties
+   
+   # Configurar las siguientes propiedades:
+   # spring.datasource.url=jdbc:mysql://localhost:3306/journals
+   # spring.datasource.username=root
+   # spring.datasource.password=your_password
+   ```
+
+3. **Compilar y ejecutar la aplicación**
+   ```bash
+   cd Code
+   mvn clean install
+   mvn spring-boot:run
+   ```
+
+4. **Acceder a la aplicación**
+   - URL: http://localhost:8080
+   - Ver credenciales de acceso más abajo
+
+### 🐳 Ejecución con Docker
+
+```bash
+# Construir la imagen
+docker build -t journals-app:latest .
+
+# Ejecutar el contenedor
+docker run -d -p 8080:8080 \
+  -e MYSQL_HOST=mysql \
+  -e MYSQL_USER=root \
+  -e MYSQL_PASSWORD=password \
+  journals-app:latest
+```
+
+## 📋 Credenciales de Acceso
+
+El sistema incluye 4 usuarios pre-configurados:
+
+### Publishers (pueden crear y gestionar journals)
+- **Usuario:** publisher1 / **Contraseña:** publisher1
+- **Usuario:** publisher2 / **Contraseña:** publisher2
+
+### Usuarios Públicos (solo lectura)
+- **Usuario:** user1 / **Contraseña:** user1
+- **Usuario:** user2 / **Contraseña:** user2
+
+## 🏗️ Arquitectura de la Aplicación
+
+### Stack Tecnológico
+- **Backend:** Spring Boot 1.3.3
+- **Frontend:** Thymeleaf + AngularJS
+- **Base de Datos:** MySQL 5.6+
+- **Seguridad:** Spring Security
+- **Build Tool:** Maven
+
+### Estructura del Proyecto
+```
+Code/
+├── pom.xml                          # Configuración Maven
+└── src/
+    ├── main/
+    │   ├── java/                    # Código fuente Java
+    │   │   └── com/semperti/trial/journals/
+    │   │       ├── config/          # Configuración Spring
+    │   │       ├── controller/      # Controladores MVC
+    │   │       ├── model/           # Entidades JPA
+    │   │       ├── repository/      # Repositorios
+    │   │       ├── rest/            # APIs REST
+    │   │       └── service/         # Lógica de negocio
+    │   └── resources/
+    │       ├── application.properties
+    │       ├── static/              # Assets (CSS, JS)
+    │       └── templates/           # Vistas Thymeleaf
+    └── test/                        # Tests unitarios
+```
+
+## 🧪 Testing
+
+```bash
+# Ejecutar todos los tests
+mvn test
+
+# Ejecutar un test específico
+mvn test -Dtest=CategoryRestServiceTest
+
+# Generar reporte de cobertura
+mvn jacoco:report
+```
+
+## 📦 Gestión de PDFs
+
+- **Directorio por defecto:** `~/upload`
+- **Cambiar directorio:** `-Dupload-dir=/path/to/directory`
+- **PDFs de ejemplo:** Disponibles en la carpeta `PDFs/`
+
+Para usar los PDFs de ejemplo:
+```bash
+cp -r PDFs/* ~/upload/
+```
+
+## 🔧 Configuración Avanzada
+
+### Variables de Entorno
+- `MYSQL_HOST`: Host de MySQL (default: localhost)
+- `MYSQL_PORT`: Puerto de MySQL (default: 3306)
+- `MYSQL_DATABASE`: Nombre de la base de datos (default: journals)
+- `MYSQL_USER`: Usuario de MySQL
+- `MYSQL_PASSWORD`: Contraseña de MySQL
+- `UPLOAD_DIR`: Directorio para almacenar PDFs
+
+### Propiedades de la Aplicación
+Editar `Code/src/main/resources/application.properties`:
+- `spring.jpa.hibernate.ddl-auto`: Estrategia de creación de esquema
+- `multipart.maxFileSize`: Tamaño máximo de archivo (default: 1MB)
+- `spring.jpa.show-sql`: Mostrar queries SQL en logs
+
+## 📞 Contacto y Soporte
+
+Para dudas o consultas sobre el bootcamp:
+- **Slack:** [Semperti Workspace](https://semperti.slack.com)
+- **Canal:** #bootcamp-devops-sre
 
 
-# Resumen de actividades
+---
+
+# 📚 Guía del Bootcamp DevOps/SRE
+
+## 🎯 Objetivos del Bootcamp
+
+Este bootcamp está diseñado para introducir a nuevos miembros del equipo DevOps/SRE en las prácticas y herramientas utilizadas en Semperti. A través de ejercicios prácticos con esta aplicación, los participantes aprenderán:
+
+- Infrastructure as Code (Terraform)
+- Configuration Management (Ansible)
+- Containerización (Docker)
+- CI/CD Pipelines (Jenkins)
+- Gestión de artefactos (Nexus)
+- GitOps y mejores prácticas
+
+## 📋 Metodología de Trabajo
+
+### Nomenclatura y Organización
+- **Repositorio:** `sre-bootcamp-[nombre]-[YYMMDD]`
+- **Branches:** `task[número]-[descripción]`
+- **PRs:** Solo archivos modificados, nunca el repo completo
+- **Documentación:** README.md en cada branch con detalles de implementación
+
+### Flujo de Trabajo
+1. Fork del repositorio base
+2. Crear branch para cada tarea
+3. Implementar cambios
+4. Documentar en README
+5. Crear PR
+6. Marcar como resuelto en Zoho Sprint
+
+## 🚀 Tareas del Bootcamp
+
+### Task 1: Crear VM con Terraform
+**Objetivo:** Provisionar infraestructura en la nube usando IaC
+
+**Requisitos:**
+- VM con máximo 2 cores y 2GB RAM
+- Sistema operativo CentOS 7
+- Accesible por VPN
+- Conectividad a Internet
+
+**Entregables:**
+- Archivos de Terraform (.tf)
+- Plan de ejecución
+- Output de terraform apply
+- Documentación de pasos
+
+### Task 2: Configurar VM con Ansible
+**Objetivo:** Automatizar la configuración del servidor
+
+**Requisitos:**
+- Instalar Java 8, Maven 3.3+, MySQL 5.6+
+- Configurar servicios necesarios
+- Preparar ambiente para la aplicación
+
+**Entregables:**
+- Playbooks de Ansible
+- Inventory files
+- Screenshots de verificación
+- Guía de ejecución
+
+### Task 3: Probar Aplicación Java
+**Objetivo:** Desplegar y validar la aplicación
+
+**Requisitos:**
+- Aplicación 100% funcional
+- Crear y visualizar journals/PDFs
+- Pasar todos los tests de Maven
+
+**Entregables:**
+- URL de acceso público
+- Evidencia de funcionalidad
+- Resultados de tests
+
+### Task 4: Cargar en Nexus
+**Objetivo:** Gestión de artefactos
+
+**Requisitos:**
+- Subir snapshot a Nexus
+- Subir release a Nexus
+- Automatizar con Ansible
+
+**Entregables:**
+- Scripts de Ansible
+- URLs de artefactos en Nexus
+- Documentación del proceso
+
+### Task 5: Dockerizar Aplicación
+**Objetivo:** Containerización de la aplicación
+
+**Requisitos:**
+- Crear Dockerfile optimizado
+- Container funcional
+- Exponer puertos necesarios
+
+**Entregables:**
+- Dockerfile
+- docker-compose.yml (opcional)
+- URL de aplicación en container
+
+### Task 6: Subir Imagen a Registry
+**Objetivo:** Gestión de imágenes Docker
+
+**Requisitos:**
+- Push a Docker Hub/Nexus
+- Sistema de versionado
+- Documentar proceso
+
+**Entregables:**
+- URL de imagen en registry
+- Esquema de tagging
+- Comandos de pull/run
+
+### Task 7: Pipeline CI
+**Objetivo:** Automatización de integración continua
+
+**Requisitos:**
+- Trigger en PRs
+- Stages: build, test, package
+- Upload a Nexus
+- Jenkins slave dedicado
+
+**Entregables:**
+- Jenkinsfile
+- Configuración de job
+- Evidencia de ejecución
+
+### Task 8: Pipeline CD
+**Objetivo:** Automatización de despliegue
+
+**Requisitos:**
+- Deploy automático
+- Health checks
+- Rollback capability
+
+**Entregables:**
+- Pipeline de deployment
+- Estrategia de despliegue
+- Logs de ejecución
+
+### Task 9: GitOps
+**Objetivo:** Implementar GitOps workflow
+
+**Requisitos:**
+- Manifests en GitHub
+- Múltiples ambientes (staging/prod)
+- Deploy basado en commits
+
+**Entregables:**
+- Estructura de manifests
+- Configuración por ambiente
+- Documentación de workflow
+
+## 📊 Criterios de Evaluación
+
+### Aspectos Técnicos
+- ✅ Funcionalidad completa
+- ✅ Código limpio y documentado
+- ✅ Mejores prácticas aplicadas
+- ✅ Automatización efectiva
+
+### Aspectos Profesionales
+- ✅ Comunicación clara
+- ✅ Resolución de problemas
+- ✅ Trabajo independiente
+- ✅ Documentación completa
+
+## 🛠️ Herramientas y Recursos
+
+### Herramientas Requeridas
+- Git
+- Docker Desktop
+- Terraform CLI
+- Ansible
+- Maven
+- IDE (IntelliJ IDEA, VS Code)
+
+### Recursos Útiles
+- [Spring Boot Documentation](https://spring.io/projects/spring-boot)
+- [Terraform Azure Provider](https://registry.terraform.io/providers/hashicorp/azurerm/latest)
+- [Ansible Documentation](https://docs.ansible.com/)
+- [Jenkins Pipeline Syntax](https://www.jenkins.io/doc/book/pipeline/syntax/)
+
+## 💡 Tips para el Éxito
+
+1. **Planifica antes de ejecutar:** Lee todos los requisitos antes de comenzar
+2. **Documenta todo:** Incluye comandos, outputs y decisiones tomadas
+3. **Testea localmente:** Valida cambios antes de hacer push
+4. **Pide ayuda:** Usa Slack cuando te bloquees
+5. **Aprende de errores:** Los logs son tus amigos
+
+## 🏆 Siguientes Pasos
+
+Una vez completado el bootcamp:
+1. Review session con el equipo
+2. Asignación a proyecto real
+3. Mentoría continua
+4. Certificación en herramientas específicas
+
+---
+
+# Historial de Actividades Completadas
 
 ## General
 - 0.0	Generar un repositorio dentro de https://github.com/semperti-bootcamp y generar un commit con los archivos iniciales del repo original SIN MODIFICACIONES

@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: journals-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: journals
+      MYSQL_USER: journals_user
+      MYSQL_PASSWORD: journals_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./Code/src/main/resources/createdb-script.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./Code/src/main/resources/data.sql:/docker-entrypoint-initdb.d/02-data.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  journals-app:
+    build:
+      context: ./Code
+      dockerfile: ../Dockerfile
+    container_name: journals-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/journals?createDatabaseIfNotExist=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: journals_user
+      SPRING_DATASOURCE_PASSWORD: journals_pass
+      UPLOAD_DIR: /app/uploads
+    volumes:
+      - ./uploads:/app/uploads
+      - ./PDFs:/app/pdfs:ro
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  mysql_data:
+    driver: local
