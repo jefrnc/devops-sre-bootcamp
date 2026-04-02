@@ -23,8 +23,7 @@ FROM eclipse-temurin:8-jre
 RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
-RUN addgroup --gid 1000 spring && \
-    adduser --disabled-password --gecos "" --uid 1000 --ingroup spring spring
+RUN useradd -m -s /bin/bash spring
 
 # Set working directory
 WORKDIR /app
@@ -36,7 +35,7 @@ RUN mkdir -p /app/uploads && chown -R spring:spring /app
 COPY --from=builder /app/target/journals-*.jar app.jar
 
 # Switch to non-root user
-USER spring:spring
+USER spring
 
 # Expose port
 EXPOSE 8080
