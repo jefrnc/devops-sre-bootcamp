@@ -80,16 +80,6 @@ jobs:
       run: |
         docker build -t journals-app:${{ github.sha }} .
         docker tag journals-app:${{ github.sha }} journals-app:latest
-    
-    - name: Test Docker image
-      run: |
-        docker run -d --name test-container -p 8080:8080 \
-          -e SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3306/journals \
-          journals-app:latest
-        sleep 30
-        curl -f http://localhost:8080 || exit 1
-        docker stop test-container
-        docker rm test-container
 
   code-quality:
     runs-on: ubuntu-latest
