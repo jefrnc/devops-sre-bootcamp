@@ -23,8 +23,8 @@ FROM eclipse-temurin:8-jre
 RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
-RUN groupadd -g 1000 spring && \
-    useradd -r -u 1000 -g spring spring
+RUN addgroup --gid 1000 spring && \
+    adduser --disabled-password --gecos "" --uid 1000 --ingroup spring spring
 
 # Set working directory
 WORKDIR /app
