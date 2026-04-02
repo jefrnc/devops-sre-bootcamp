@@ -1,5 +1,5 @@
 # Build stage
-FROM maven:3.6-jdk-8-alpine AS builder
+FROM maven:3.8-eclipse-temurin-8 AS builder
 
 # Set working directory
 WORKDIR /app
@@ -17,14 +17,14 @@ COPY Code/src ./src
 RUN mvn clean package -DskipTests
 
 # Runtime stage
-FROM openjdk:8-jre-alpine
+FROM eclipse-temurin:8-jre
 
 # Install curl for healthcheck
-RUN apk add --no-cache curl
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
-RUN addgroup -g 1000 spring && \
-    adduser -D -s /bin/sh -u 1000 -G spring spring
+RUN groupadd -g 1000 spring && \
+    useradd -r -u 1000 -g spring spring
 
 # Set working directory
 WORKDIR /app
